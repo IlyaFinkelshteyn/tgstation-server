@@ -6,7 +6,7 @@ environment:
   snk_passphrase:
     secure: dsRGlNewYn/JoycPaMoxLCrb3wkL31RsdU7Xwbo7TIAmClwShCVWeRPN+eGA+fMZX12MDNRBs8Fws4IxqLKQ36thQo6p2B+kPksAUJiAOR5QKJoT6nt8JB1wBMFS2kH4
 skip_branch_with_pr: true
-image: Visual Studio 2017
+image: Previous VS 2017
 configuration: Release
 shallow_clone: true
 artifacts:
@@ -41,6 +41,7 @@ after_build:
   - ps: if($env:APPVEYOR_REPO_COMMIT_MESSAGE -match "\[NugetDeploy\]"){ if($env:APPVEYOR_REPO_BRANCH -match "master"){ $env:NugetDeploy = "Do it." }}
   - ps: $env:TGSVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$env:APPVEYOR_BUILD_FOLDER/TGS.Server/bin/Release/TGS.Server.dll").FileVersion
 test_script:
+  - set path=%ProgramFiles(x86)%\Microsoft Visual Studio\2017\TestAgent\Common7\IDE\CommonExtensions\Microsoft\TestWindow;%path%
   - copy "%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\TestWindow\Extensions\appveyor.*" "%ProgramFiles(x86)%\Microsoft Visual Studio\2017\TestAgent\Common7\IDE\CommonExtensions\Microsoft\TestWindow\Extensions" /y
   - vstest.console /logger:Appveyor "TGS.Tests\bin\Release\TGS.Tests.dll" /Enablecodecoverage /Settings:"Tools/CoverageExclusions.runsettings" /inIsolation /Platform:x64
 after_test:
